@@ -494,7 +494,7 @@ alert.${pgType}({
             </div>
 
             <h1 className="text-3xl sm:text-5xl font-extrabold text-slate-900 leading-tight">
-              Simple alerts with a <span className="text-[#DC143C]">Nepali</span> touch.
+              SajiloAlert
             </h1>
 
             <p className="mt-3 text-slate-500 max-w-xl text-sm sm:text-base leading-relaxed">
