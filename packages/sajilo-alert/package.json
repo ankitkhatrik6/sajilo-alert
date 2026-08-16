@@ -1,0 +1,55 @@
+{
+  "name": "sajilo-alert",
+  "version": "1.0.0",
+  "description": "Lightweight, accessible, framework-independent alert, modal, toast, and confirmation library with a clean Nepali visual identity.",
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./dist/index.d.mts",
+        "default": "./dist/index.mjs"
+      },
+      "require": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
+      }
+    },
+    "./dist/sajilo-alert.css": "./dist/sajilo-alert.css"
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "keywords": [
+    "alert",
+    "modal",
+    "toast",
+    "confirm",
+    "dialog",
+    "nepal",
+    "nepali",
+    "notification",
+    "sweetalert",
+    "popup",
+    "typescript",
+    "zero-dependency",
+    "accessible"
+  ],
+  "author": "Ankit Khatri KC <info.ankitkhatrik6@gmail.com>",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ankitkhatrik6/sajilo-alert.git"
+  },
+  "bugs": {
+    "url": "https://github.com/ankitkhatrik6/sajilo-alert/issues"
+  },
+  "homepage": "https://github.com/ankitkhatrik6/sajilo-alert#readme",
+  "publishConfig": {
+    "access": "public"
+  },
+  "sideEffects": false
+}
