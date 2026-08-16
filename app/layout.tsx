@@ -2,13 +2,13 @@ import type {Metadata} from 'next';
 import './globals.css'; // Global styles
 
 export const metadata: Metadata = {
-  title: 'SajiloAlert — Alert & Toast Library',
+  title: 'SajiloAlert',
   description: 'A modern, zero-dependency JavaScript/TypeScript alert, modal, confirmation, loading, and toast library with Nepali visual identity and bilingual support.',
   icons: {
     icon: '/logo.png',
   },
   openGraph: {
-    title: 'SajiloAlert — Simple alerts',
+    title: 'SajiloAlert',
     description: 'A modern, zero-dependency JavaScript/TypeScript alert, modal, and toast notification library.',
     type: 'website',
     images: [
@@ -22,7 +22,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'SajiloAlert — Simple alerts',
+    title: 'SajiloAlert',
     description: 'A modern, zero-dependency JavaScript/TypeScript alert, modal, and toast notification library.',
     images: ['/preview.png'],
   },
