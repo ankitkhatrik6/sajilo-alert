@@ -489,13 +489,12 @@ alert.${pgType}({
       <header className="bg-white py-8 sm:py-10 px-4 sm:px-8 lg:px-12 border-b border-slate-200 w-full max-w-full overflow-hidden">
         <div className="max-w-7xl mx-auto flex flex-col lg:flex-row justify-between items-start lg:items-center gap-6 sm:gap-8">
           <div className="min-w-0 max-w-full">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-red-50 border border-red-200/80 text-[#DC143C] text-xs font-bold mb-4 shadow-2xs">
-              <span className="truncate">नेपाली पहिचान सहितको आधुनिक अलर्ट र मोडल लाइब्रेरी</span>
+            <div className="inline-flex items-center px-3 py-1 rounded-full bg-red-50 border border-red-200/80 text-[#DC143C] text-xs font-bold mb-4 shadow-2xs">
+              <span className="truncate">SajiloAlert Library</span>
             </div>
 
-            <h1 className="text-2xl sm:text-4xl lg:text-5xl font-extrabold text-slate-900 leading-tight">
-              Lightweight notifications <br />
-              with a <span className="text-[#DC143C]">Nepali</span> touch.
+            <h1 className="text-3xl sm:text-5xl font-extrabold text-slate-900 leading-tight">
+              Simple alerts with a <span className="text-[#DC143C]">Nepali</span> touch.
             </h1>
 
             <p className="mt-3 text-slate-500 max-w-xl text-sm sm:text-base leading-relaxed">
