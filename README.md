@@ -1,73 +1,83 @@
-# SajiloAlert
+<p align="center">
+  <a href="https://sajilo-alert.ankitak.com.np/">
+    <img alt="SajiloAlert" src="https://sajilo-alert.ankitak.com.np/logo.png" width="150" style="border-radius: 20px;">
+  </a>
+</p>
 
-I built SajiloAlert to provide a lightweight, accessible, zero-dependency JavaScript and TypeScript alert, modal, confirmation, loading, and toast notification library. It is inspired by SweetAlert but designed with a clean Nepali visual identity and bilingual support.
+<p align="center">
+  A beautiful, lightweight, and accessible replacement for JavaScript's "alert".
+</p>
 
-[![npm version](https://img.shields.io/badge/npm-v1.0.0-blue.svg)](https://www.npmjs.com/package/sajilo-alert)
-[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
-[![Zero Dependencies](https://img.shields.io/badge/dependencies-0-success.svg)](https://bundlephobia.com)
-[![TypeScript](https://img.shields.io/badge/TypeScript-Ready-3178C6.svg)](https://www.typescriptlang.org/)
+<p align="center">
+  <a href="https://www.npmjs.com/package/sajilo-alert"><img src="https://img.shields.io/npm/v/sajilo-alert.svg" alt="npm version" height="20"></a>
+  <a href="https://bundlephobia.com/package/sajilo-alert"><img src="https://img.shields.io/bundlephobia/minzip/sajilo-alert.svg" alt="Bundle Size" height="20"></a>
+  <a href="https://github.com/ankitkhatrik6/sajilo-alert/blob/main/LICENSE"><img src="https://img.shields.io/github/license/ankitkhatrik6/sajilo-alert.svg" alt="License" height="20"></a>
+  <img src="https://img.shields.io/badge/dependencies-0-success.svg" alt="Zero Dependencies" height="20">
+  <img src="https://img.shields.io/badge/TypeScript-Ready-3178C6.svg" alt="TypeScript" height="20">
+</p>
 
-## Features
-
-- **Nepali and English Support**: Default Nepali system labels with instant language switching.
-- **Zero Runtime Dependencies**: Pure TypeScript and standard DOM APIs with embedded CSS.
-- **4 Built-in Themes**: Nepal (Himalayan Crimson and Navy), Light, Dark, and Minimal.
-- **Dual Mode**: Center dialog modals and stacked toast notifications.
-- **Async Promises**: Simple promise pipeline with auto loading, success, and error states.
-- **Confirmation Dialog**: Clean confirmation returning a boolean promise.
-- **Undo and Action Alerts**: Built-in undo notification with single-execution guarantees.
-- **Accessible**: Full ARIA roles, focus trap, Escape key dismiss, and focus restoration.
-- **Fully Responsive**: Mobile-first design.
 
 ## Installation
 
 ```bash
-npm install sajilo-alert
+$ npm install sajilo-alert
 ```
 
-## Quick Start
+## Usage
 
-```typescript
-import { alert } from "sajilo-alert";
+```javascript
+import { alert } from 'sajilo-alert';
 
-// Simple success alert
 alert.success("काम सफल भयो!");
 ```
 
-SajiloAlert works anywhere: Vanilla JS, TypeScript, React, Next.js, Vue, Svelte, and Vite.
+## Documentation
 
-## Basic Usage
+Full documentation, interactive guides, and a live playground are available on the official website:
 
-```typescript
-import { alert } from "sajilo-alert";
+- [Live Playground & Builder](https://sajilo-alert.ankitak.com.np/#section-playground)
+- [Configuration](https://sajilo-alert.ankitak.com.np/#section-customization)
+- [Framework Integration (React, Next.js, Vue, Svelte)](https://sajilo-alert.ankitak.com.np/#section-frameworks)
 
-alert.success("Success message here");
-alert.error("Error message here");
-alert.warning("Warning message here");
-alert.info("Info message here");
-alert.loading("Loading message here");
+## Examples
+
+### Basic Alerts:
+```javascript
+alert.success("Operation completed successfully.");
+alert.error("An unexpected error occurred.");
+alert.warning("Please check your input data.");
+alert.info("A new software update is available.");
 ```
 
-## Confirmation Dialog
+### A confirmation dialog (returns a Promise resolving to a boolean):
+  - Using async/await:
+  ```javascript
+  const isConfirmed = await alert.confirm({
+    title: "Delete Account?",
+    message: "This action cannot be undone.",
+    confirmText: "Delete",
+    cancelText: "Cancel"
+  });
 
-```typescript
-const confirmed = await alert.confirm({
-  title: "Delete Account?",
-  message: "This action cannot be undone.",
-  confirmText: "Delete",
-  cancelText: "Cancel"
-});
+  if (isConfirmed) {
+    alert.success("Account deleted successfully!");
+  }
+  ```
+  - Using promises:
+  ```javascript
+  alert.confirm({
+    title: "Log out?",
+    message: "Are you sure you want to log out?"
+  })
+  .then((isConfirmed) => {
+    if (isConfirmed) {
+      alert.toast.info("Logged out successfully.");
+    }
+  });
+  ```
 
-if (confirmed) {
-  // User confirmed action
-}
-```
-
-## Promise Support
-
-Handle async operations seamlessly:
-
-```typescript
+### Handling Async Operations with Promises:
+```javascript
 await alert.promise(fetchData(), {
   loading: "Loading data...",
   success: (data) => `Data received: ${data.name}!`,
@@ -75,26 +85,28 @@ await alert.promise(fetchData(), {
 });
 ```
 
-## Toast Notifications
-
-Small, non-blocking toast notifications that stack and auto-dismiss:
-
-```typescript
-alert.toast.success("Saved successfully!");
+### Non-blocking Toast Notifications:
+```javascript
+alert.toast.success("Settings saved successfully.");
 alert.toast.error("Network disconnected!");
 ```
 
-## Configuration and Themes
+## Theming & Configuration
 
-Configure globally or per-alert. Available themes are nepal, light, dark, and minimal.
+SajiloAlert comes with 4 built-in themes (`nepal`, `light`, `dark`, `minimal`) and native bilingual support (English and Nepali). 
 
-```typescript
+```javascript
 alert.configure({
   theme: "nepal",
-  language: "ne"
+  language: "en",       // 'en' or 'ne'
+  position: "center",
+  duration: 4000,
+  closeOnEscape: true
 });
 ```
 
+[Read more about customization and themes](https://sajilo-alert.ankitak.com.np/#section-customization)
+
 ## License
 
-[MIT](LICENSE) (c) 2026 Ankit Khatri KC
+This project is licensed under the MIT License — see the [LICENSE](LICENSE) file for details.
