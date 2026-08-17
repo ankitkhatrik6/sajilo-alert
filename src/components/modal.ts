@@ -53,7 +53,7 @@ export function createModal(
   const type = options.type || 'info';
   const closeOnEscape = options.closeOnEscape !== undefined ? options.closeOnEscape : state.config.closeOnEscape;
   const closeOnBackdrop = options.closeOnBackdrop !== undefined ? options.closeOnBackdrop : state.config.closeOnBackdrop;
-  const showClose = options.showClose !== undefined ? options.showClose : (type !== 'loading');
+  const showClose = options.showClose === true;
 
   // Determine title and message
   let title = options.title;
