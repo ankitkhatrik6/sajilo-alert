@@ -1,8 +1,3 @@
-/**
- * SajiloAlert - Modern, Lightweight, Accessible Alert & Toast Library
- * Scoped styles and CSS variables
- */
-
 :root {
   --sa-primary: #1e3a8a;
   --sa-primary-hover: #172554;
@@ -27,12 +22,13 @@
   --sa-text: #0f172a;
   --sa-text-muted: #64748b;
   --sa-border: #e2e8f0;
-  --sa-radius: 12px;
+  --sa-radius: 14px;
   --sa-radius-sm: 8px;
   --sa-radius-pill: 9999px;
   --sa-shadow: 0 20px 25px -5px rgba(15, 23, 42, 0.12), 0 8px 10px -6px rgba(15, 23, 42, 0.08);
   --sa-toast-shadow: 0 10px 15px -3px rgba(15, 23, 42, 0.1), 0 4px 6px -4px rgba(15, 23, 42, 0.05);
   --sa-backdrop: rgba(15, 23, 42, 0.45);
+  --sa-focus-ring: rgba(30, 58, 138, 0.25);
   --sa-font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Noto Sans Devanagari', Mukta, sans-serif;
   --sa-transition: 200ms cubic-bezier(0.16, 1, 0.3, 1);
   --sa-accent-line: transparent;
@@ -51,8 +47,9 @@
   --sa-text: #1c1917;
   --sa-text-muted: #57534e;
   --sa-border: #e7e5e4;
-  --sa-radius: 12px;
-  --sa-shadow: 0 20px 25px -5px rgba(220, 20, 60, 0.1), 0 8px 10px -6px rgba(0, 56, 147, 0.08);
+  --sa-radius: 14px;
+  --sa-shadow: 0 20px 25px -5px rgba(220, 20, 60, 0.12), 0 8px 10px -6px rgba(0, 56, 147, 0.08);
+  --sa-focus-ring: rgba(220, 20, 60, 0.28);
   --sa-accent-line: #DC143C;
 }
 
@@ -69,8 +66,9 @@
   --sa-text: #0f172a;
   --sa-text-muted: #64748b;
   --sa-border: #e2e8f0;
-  --sa-radius: 12px;
+  --sa-radius: 14px;
   --sa-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
+  --sa-focus-ring: rgba(37, 99, 235, 0.28);
   --sa-accent-line: transparent;
 }
 
@@ -99,10 +97,11 @@
   --sa-text: #f8fafc;
   --sa-text-muted: #94a3b8;
   --sa-border: #334155;
-  --sa-radius: 12px;
+  --sa-radius: 14px;
   --sa-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
   --sa-toast-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.4);
   --sa-backdrop: rgba(0, 0, 0, 0.7);
+  --sa-focus-ring: rgba(59, 130, 246, 0.35);
   --sa-accent-line: transparent;
 }
 
@@ -125,6 +124,7 @@
   --sa-shadow: 4px 4px 0px #18181b;
   --sa-toast-shadow: 3px 3px 0px #18181b;
   --sa-backdrop: rgba(0, 0, 0, 0.3);
+  --sa-focus-ring: rgba(24, 24, 27, 0.3);
   --sa-accent-line: transparent;
 }
 
@@ -140,12 +140,17 @@
   box-sizing: border-box;
   padding: 16px;
   opacity: 0;
-  transition: opacity var(--sa-transition);
   font-family: var(--sa-font-family);
+  transition: opacity 0.2s ease-out;
 }
 
 .sa-backdrop.sa-visible {
   opacity: 1;
+}
+
+.sa-backdrop.sa-closing {
+  opacity: 0;
+  pointer-events: none;
 }
 
 /* Positions for Modals */
@@ -166,31 +171,33 @@
   padding-bottom: 48px;
 }
 
-/* Modal Container */
+/* Modal Container & SweetAlert2 Pop Animation */
 .sa-modal {
   position: relative;
   width: 100%;
-  max-width: 440px;
+  max-width: 420px;
   background: var(--sa-background);
   color: var(--sa-text);
   border: 1px solid var(--sa-border);
   border-radius: var(--sa-radius);
   box-shadow: var(--sa-shadow);
-  padding: 24px;
+  padding: 28px 24px 24px 24px;
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
   align-items: center;
   text-align: center;
-  transform: scale(0.94) translateY(8px);
+  transform: scale(0.7);
   opacity: 0;
-  transition: transform var(--sa-transition), opacity var(--sa-transition);
   overflow: hidden;
 }
 
 .sa-backdrop.sa-visible .sa-modal {
-  transform: scale(1) translateY(0);
-  opacity: 1;
+  animation: sa-modal-pop 0.32s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+}
+
+.sa-backdrop.sa-closing .sa-modal {
+  animation: sa-modal-hide 0.18s cubic-bezier(0.4, 0, 1, 1) forwards;
 }
 
 /* Nepal Theme subtle decorative header stripe */
@@ -202,46 +209,64 @@
   right: 0;
   height: 4px;
   background: var(--sa-accent-line);
+  z-index: 2;
 }
 
 /* Modal Close Button */
 .sa-close-btn {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  outline: none !important;
+  border: 0 !important;
+  box-shadow: none !important;
+  margin: 0;
   position: absolute;
   top: 14px;
   right: 14px;
   width: 32px;
   height: 32px;
   border-radius: var(--sa-radius-sm);
-  border: none;
   background: transparent;
   color: var(--sa-text-muted);
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: background-color 0.15s ease, color 0.15s ease;
+  transition: background-color 0.15s ease, color 0.15s ease, transform 0.15s ease;
   padding: 0;
+  box-sizing: border-box;
+  z-index: 10;
 }
 
 .sa-close-btn:hover {
   background-color: var(--sa-surface);
   color: var(--sa-text);
+  transform: scale(1.05);
 }
 
+.sa-close-btn:active {
+  transform: scale(0.95);
+}
+
+.sa-close-btn:focus,
 .sa-close-btn:focus-visible {
-  outline: 2px solid var(--sa-primary);
-  outline-offset: 2px;
+  outline: none !important;
+  border: 0 !important;
+  box-shadow: none !important;
 }
 
-/* Modal Icon Section */
+/* Modal Icon Section & SweetAlert2 Animated Icons */
 .sa-icon-wrapper {
-  margin-bottom: 16px;
+  margin-bottom: 18px;
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 56px;
-  height: 56px;
+  width: 60px;
+  height: 60px;
   border-radius: 50%;
+  box-sizing: border-box;
+  position: relative;
 }
 
 .sa-icon-type-success {
@@ -285,8 +310,111 @@
 }
 
 .sa-icon-svg {
-  width: 32px;
-  height: 32px;
+  width: 36px;
+  height: 36px;
+  display: block;
+}
+
+/* SweetAlert2 Icon Entrance & Stroke Keyframe Animations */
+.sa-backdrop.sa-visible .sa-icon-type-success {
+  animation: sa-icon-pop 0.45s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+}
+
+.sa-backdrop.sa-visible .sa-icon-type-success .sa-icon-circle {
+  stroke-dasharray: 63;
+  stroke-dashoffset: 63;
+  animation: sa-draw-stroke 0.4s 0.05s ease-out forwards;
+}
+
+.sa-backdrop.sa-visible .sa-icon-type-success .sa-icon-check {
+  stroke-dasharray: 24;
+  stroke-dashoffset: 24;
+  animation: sa-draw-stroke 0.35s 0.22s cubic-bezier(0.65, 0, 0.45, 1) forwards;
+}
+
+.sa-backdrop.sa-visible .sa-icon-type-error {
+  animation: sa-icon-shake 0.5s 0.05s cubic-bezier(0.36, 0.07, 0.19, 0.97) forwards;
+}
+
+.sa-backdrop.sa-visible .sa-icon-type-error .sa-icon-circle {
+  stroke-dasharray: 63;
+  stroke-dashoffset: 63;
+  animation: sa-draw-stroke 0.35s ease-out forwards;
+}
+
+.sa-backdrop.sa-visible .sa-icon-type-error .sa-icon-x-1 {
+  stroke-dasharray: 14;
+  stroke-dashoffset: 14;
+  animation: sa-draw-stroke 0.22s 0.18s ease-out forwards;
+}
+
+.sa-backdrop.sa-visible .sa-icon-type-error .sa-icon-x-2 {
+  stroke-dasharray: 14;
+  stroke-dashoffset: 14;
+  animation: sa-draw-stroke 0.22s 0.26s ease-out forwards;
+}
+
+.sa-backdrop.sa-visible .sa-icon-type-warning {
+  animation: sa-icon-pop 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+}
+
+.sa-backdrop.sa-visible .sa-icon-type-warning .sa-icon-triangle {
+  stroke-dasharray: 68;
+  stroke-dashoffset: 68;
+  animation: sa-draw-stroke 0.4s ease-out forwards;
+}
+
+.sa-backdrop.sa-visible .sa-icon-type-warning .sa-icon-excl-line {
+  stroke-dasharray: 8;
+  stroke-dashoffset: 8;
+  animation: sa-draw-stroke 0.25s 0.2s ease-out forwards;
+}
+
+.sa-backdrop.sa-visible .sa-icon-type-warning .sa-icon-excl-dot {
+  opacity: 0;
+  animation: sa-fade-in 0.2s 0.28s ease-out forwards;
+}
+
+.sa-backdrop.sa-visible .sa-icon-type-info {
+  animation: sa-icon-pop 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+}
+
+.sa-backdrop.sa-visible .sa-icon-type-info .sa-icon-circle {
+  stroke-dasharray: 63;
+  stroke-dashoffset: 63;
+  animation: sa-draw-stroke 0.35s ease-out forwards;
+}
+
+.sa-backdrop.sa-visible .sa-icon-type-info .sa-icon-info-line {
+  stroke-dasharray: 8;
+  stroke-dashoffset: 8;
+  animation: sa-draw-stroke 0.25s 0.18s ease-out forwards;
+}
+
+.sa-backdrop.sa-visible .sa-icon-type-info .sa-icon-info-dot {
+  opacity: 0;
+  animation: sa-fade-in 0.2s 0.25s ease-out forwards;
+}
+
+.sa-backdrop.sa-visible .sa-icon-type-confirm {
+  animation: sa-icon-flip 0.45s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+}
+
+.sa-backdrop.sa-visible .sa-icon-type-confirm .sa-icon-circle {
+  stroke-dasharray: 63;
+  stroke-dashoffset: 63;
+  animation: sa-draw-stroke 0.35s ease-out forwards;
+}
+
+.sa-backdrop.sa-visible .sa-icon-type-confirm .sa-icon-question-body {
+  stroke-dasharray: 20;
+  stroke-dashoffset: 20;
+  animation: sa-draw-stroke 0.3s 0.18s ease-out forwards;
+}
+
+.sa-backdrop.sa-visible .sa-icon-type-confirm .sa-icon-question-dot {
+  opacity: 0;
+  animation: sa-fade-in 0.2s 0.26s ease-out forwards;
 }
 
 .sa-spin {
@@ -320,7 +448,7 @@
   margin-bottom: 0;
 }
 
-/* Actions & Buttons */
+/* Actions & Buttons Reset (No unwanted button border/outlines) */
 .sa-actions {
   display: flex;
   gap: 10px;
@@ -328,61 +456,105 @@
   justify-content: center;
   align-items: center;
   flex-wrap: wrap;
+  margin-top: 4px;
 }
 
 .sa-btn {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  outline: none !important;
+  border: 0 !important;
+  box-sizing: border-box;
+  margin: 0;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-tap-highlight-color: transparent;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 10px 20px;
+  padding: 10px 24px;
   min-height: 42px;
   font-size: 0.9375rem;
   font-weight: 600;
+  line-height: 1.25;
   border-radius: var(--sa-radius-sm);
-  border: 1px solid transparent;
   cursor: pointer;
-  transition: all 0.15s ease;
   white-space: nowrap;
   font-family: inherit;
   flex: 1 1 auto;
-  min-width: 100px;
+  min-width: 108px;
+  position: relative;
+  box-shadow: none !important;
+  transition: background-color 0.16s ease, transform 0.12s ease;
 }
 
+.sa-btn:active {
+  transform: scale(0.97);
+}
+
+.sa-btn:focus,
 .sa-btn:focus-visible {
-  outline: 2px solid var(--sa-primary);
-  outline-offset: 2px;
+  outline: none !important;
+  border: 0 !important;
+  box-shadow: none !important;
 }
 
 .sa-btn-primary {
   background-color: var(--sa-primary);
   color: var(--sa-primary-text);
-  border-color: var(--sa-primary);
+  border: 0 !important;
+  outline: none !important;
+  box-shadow: none !important;
 }
 
 .sa-btn-primary:hover {
   background-color: var(--sa-primary-hover);
-  border-color: var(--sa-primary-hover);
+}
+
+.sa-btn-primary:focus,
+.sa-btn-primary:focus-visible {
+  outline: none !important;
+  border: 0 !important;
+  box-shadow: none !important;
 }
 
 .sa-btn-secondary {
   background-color: var(--sa-surface);
   color: var(--sa-text);
-  border-color: var(--sa-border);
+  border: 0 !important;
+  outline: none !important;
+  box-shadow: none !important;
 }
 
 .sa-btn-secondary:hover {
   background-color: var(--sa-border);
 }
 
+.sa-btn-secondary:focus,
+.sa-btn-secondary:focus-visible {
+  outline: none !important;
+  border: 0 !important;
+  box-shadow: none !important;
+}
+
 .sa-btn-danger {
   background-color: var(--sa-danger);
   color: #ffffff;
-  border-color: var(--sa-danger);
+  border: 0 !important;
+  outline: none !important;
+  box-shadow: none !important;
 }
 
 .sa-btn-danger:hover {
   background-color: var(--sa-danger-hover);
-  border-color: var(--sa-danger-hover);
+}
+
+.sa-btn-danger:focus,
+.sa-btn-danger:focus-visible {
+  outline: none !important;
+  border: 0 !important;
+  box-shadow: none !important;
 }
 
 .sa-btn-undo {
@@ -390,7 +562,18 @@
   color: var(--sa-primary-text);
   padding: 6px 14px;
   min-height: 32px;
+  min-width: auto;
   font-size: 0.8125rem;
+  border: 0 !important;
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+.sa-btn-undo:focus,
+.sa-btn-undo:focus-visible {
+  outline: none !important;
+  border: 0 !important;
+  box-shadow: none !important;
 }
 
 /* Toast Container & Notification Styling */
@@ -445,7 +628,7 @@
   align-items: center;
 }
 
-/* Individual Toast Notification */
+/* Individual Toast Notification & Spring Entrance */
 .sa-toast {
   pointer-events: auto;
   min-width: 280px;
@@ -461,15 +644,17 @@
   gap: 12px;
   box-sizing: border-box;
   opacity: 0;
-  transform: translateY(-8px) scale(0.96);
-  transition: opacity var(--sa-transition), transform var(--sa-transition), margin-top var(--sa-transition);
+  transform: scale(0.92) translateY(-6px);
   position: relative;
   overflow: hidden;
 }
 
 .sa-toast.sa-visible {
-  opacity: 1;
-  transform: translateY(0) scale(1);
+  animation: sa-toast-pop 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+}
+
+.sa-toast.sa-closing {
+  animation: sa-toast-hide 0.2s cubic-bezier(0.4, 0, 1, 1) forwards;
 }
 
 .sa-theme-nepal .sa-toast {
@@ -520,11 +705,17 @@
 }
 
 .sa-toast-close {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  outline: none !important;
+  border: 0 !important;
+  box-shadow: none !important;
+  margin: 0;
   flex-shrink: 0;
   width: 22px;
   height: 22px;
   border-radius: 4px;
-  border: none;
   background: transparent;
   color: var(--sa-text-muted);
   cursor: pointer;
@@ -532,6 +723,8 @@
   align-items: center;
   justify-content: center;
   padding: 0;
+  box-sizing: border-box;
+  transition: background-color 0.15s ease, color 0.15s ease;
 }
 
 .sa-toast-close:hover {
@@ -539,9 +732,137 @@
   color: var(--sa-text);
 }
 
+.sa-toast-close:focus,
+.sa-toast-close:focus-visible {
+  outline: none !important;
+  border: 0 !important;
+  box-shadow: none !important;
+}
+
 .sa-toast-close .sa-icon-svg {
   width: 14px;
   height: 14px;
+}
+
+/* Keyframe Animations (SweetAlert2 Style) */
+@keyframes sa-modal-pop {
+  0% {
+    opacity: 0;
+    transform: scale(0.68) translateY(0);
+  }
+  50% {
+    opacity: 0.95;
+    transform: scale(1.03) translateY(0);
+  }
+  75% {
+    opacity: 1;
+    transform: scale(0.985) translateY(0);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+@keyframes sa-modal-hide {
+  0% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(0.75);
+  }
+}
+
+@keyframes sa-toast-pop {
+  0% {
+    opacity: 0;
+    transform: scale(0.88) translateY(-6px);
+  }
+  60% {
+    transform: scale(1.02) translateY(0);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+@keyframes sa-toast-hide {
+  0% {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(0.85) translateY(-8px);
+  }
+}
+
+@keyframes sa-icon-pop {
+  0% {
+    transform: scale(0.3);
+    opacity: 0;
+  }
+  60% {
+    transform: scale(1.15);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes sa-icon-shake {
+  0% {
+    transform: scale(0.3);
+    opacity: 0;
+  }
+  35% {
+    transform: scale(1.1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1) translateX(-6px);
+  }
+  65% {
+    transform: scale(1) translateX(6px);
+  }
+  80% {
+    transform: scale(1) translateX(-3px);
+  }
+  100% {
+    transform: scale(1) translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes sa-icon-flip {
+  0% {
+    transform: rotateY(-90deg) scale(0.5);
+    opacity: 0;
+  }
+  60% {
+    transform: rotateY(15deg) scale(1.08);
+    opacity: 1;
+  }
+  100% {
+    transform: rotateY(0deg) scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes sa-draw-stroke {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes sa-fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
 
 /* Reduced Motion Support */
@@ -549,10 +870,18 @@
   .sa-backdrop,
   .sa-modal,
   .sa-toast,
-  .sa-spin {
+  .sa-spin,
+  .sa-icon-wrapper,
+  .sa-icon-circle,
+  .sa-icon-check,
+  .sa-icon-triangle,
+  .sa-icon-x-1,
+  .sa-icon-x-2 {
     animation: none !important;
     transition: none !important;
     transform: none !important;
+    stroke-dashoffset: 0 !important;
+    opacity: 1 !important;
   }
 }
 
@@ -562,7 +891,8 @@
     padding: 12px;
   }
   .sa-modal {
-    padding: 20px 16px;
+    padding: 24px 18px 20px 18px;
+    max-width: 100%;
   }
   .sa-actions {
     flex-direction: column;
