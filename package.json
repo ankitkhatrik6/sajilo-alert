@@ -37,9 +37,9 @@
     "toast",
     "confirm",
     "dialog",
-    "nepali",
+    "nepalialert",
     "notification",
-    "sweetalert"
+    "sajiloalert"
   ],
   "author": "Ankit Khatri KC <info.ankitkhatrik6@gmail.com>",
   "license": "MIT",
