@@ -29,5 +29,3 @@ export type {
 
 export type { LocaleStrings } from './locales/ne';
 
-// Default export
-export default alert;
